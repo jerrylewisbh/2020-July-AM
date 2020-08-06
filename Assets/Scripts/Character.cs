@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-    public float MoveSpeed = 20;
+    public float MoveSpeed = 25;
     public CharacterController characterController;
 
     // Start is called before the first frame update
