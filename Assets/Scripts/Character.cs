@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,5 +31,13 @@ public class Character : MonoBehaviour
         float verticalValue = Input.GetAxis("Vertical");
         //Moves around the local Z axis 
         characterController.SimpleMove(transform.forward * (MoveSpeed * verticalValue) );
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            Debug.Log("Hit a wall");
+        }
     }
 }
