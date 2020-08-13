@@ -10,10 +10,11 @@ public class Character : MonoBehaviour
     public float RotateSpeed = 10;
     public CharacterController characterController;
 
+    private int totalScore = 0;
+
     // Start is called before the first frame update
     void Start()
     {
-
         Debug.Log("Start Was Called");
     }
 
@@ -38,6 +39,24 @@ public class Character : MonoBehaviour
         if (other.gameObject.CompareTag("Wall"))
         {
             Debug.Log("Hit a wall");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        Collectible collectible = other.GetComponent<Collectible>();
+
+        if (collectible != null)
+        {
+            totalScore = totalScore + collectible.score;
+            Destroy(collectible.gameObject);
+        }
+        
+        
+        if (other.gameObject.CompareTag("Wall"))
+        {
+            Debug.Log("Collided with a trigger wall");
         }
     }
 }
