@@ -8,4 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ARMobile.unity
     guid: d35cb889b0b0719439eabe943b84eb2e
-  m_configObjects: {}
+  m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 4736f0c0d4857ca488b22a7cf5dc4bca,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1cc4391c97432a54c9cc75a67fd48102,
+      type: 2}
