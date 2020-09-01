@@ -2,30 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour
+public class Gun : Interactible
 {
     public Transform spawnPoint;
     public GameObject bullet;
 
     public float power = 20;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Shoot()
     {
-        
+        GameObject clone = Instantiate(bullet, spawnPoint.position, spawnPoint.rotation);
+
+        Rigidbody cloneRigidbody = clone.GetComponent<Rigidbody>();
+
+        cloneRigidbody.AddForce(spawnPoint.forward * power, ForceMode.Force);
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Interact()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject clone = Instantiate(bullet, spawnPoint.position, spawnPoint.rotation);
-
-            Rigidbody cloneRigidbody = clone.GetComponent<Rigidbody>();
-
-            cloneRigidbody.AddForce(spawnPoint.forward * power, ForceMode.Force);
-
-        }
+        Shoot();
     }
 }

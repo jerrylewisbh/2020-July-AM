@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(Rigidbody))]
 public class Grabbable : MonoBehaviour
 {
     // Start is called before the first frame update
