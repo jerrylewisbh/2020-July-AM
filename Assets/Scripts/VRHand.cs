@@ -53,7 +53,6 @@ public class VRHand : MonoBehaviour
         if (isKeyboardEnabled)
         {
             MoveHands();
-            KeyCode.UpArrow
         }
 
         if (Input.GetMouseButton(mouseButton))
