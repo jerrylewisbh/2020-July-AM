@@ -15,13 +15,14 @@ public class VRHand : MonoBehaviour
     private string gripButtonName;
     private int mouseButton;
 
-    [SerializeField] [Tooltip("Determines if the hand moves with keyboard")]
+    [SerializeField]
+    [Tooltip("Determines if the hand moves with keyboard")]
     private bool isKeyboardEnabled = true;
 
-    [SerializeField] 
+    [SerializeField]
     private float throwForce = 10;
-    
-    
+
+
     [SerializeField] private float handMovementSpeed = 1;
     private Animator animator;
     private GameObject touchedObject = null;
@@ -49,7 +50,7 @@ public class VRHand : MonoBehaviour
 
     public void Update()
     {
-        
+
         if (isKeyboardEnabled)
         {
             MoveHands();
@@ -61,26 +62,26 @@ public class VRHand : MonoBehaviour
 
             if (!isGrabbing)
             {
-                Grab();
+                //Grab();
+                AdvancedGrab();
             }
         }
 
         if (Input.GetMouseButtonUp(mouseButton))
         {
             animator.SetBool("gripPressed", false);
-            Release();
+            //Release();
+            AdvanceRelease();
         }
 
         float gripValue = Input.GetAxis(gripButtonName);
-        Debug.Log("GRIP VALUE: " + gripValue);
-        
-        
         //animator.SetBool("gripPressed", true);
-        
+
         previousPosition = transform.position;
         previousRotation = transform.rotation.eulerAngles;
-        
-        
+
+
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (isGrabbing)
@@ -89,9 +90,10 @@ public class VRHand : MonoBehaviour
                 interactible.Interact();
             }
         }
-        
-        
+
+
     }
+
 
 
     private void Grab()
@@ -101,6 +103,33 @@ public class VRHand : MonoBehaviour
             touchedObject.transform.parent = transform;
             touchedObject.GetComponent<Rigidbody>().isKinematic = true;
             isGrabbing = true;
+        }
+    }
+
+    private void AdvancedGrab()
+    {
+        if(touchedObject != null)
+        {
+            FixedJoint joint = touchedObject.AddComponent<FixedJoint>();
+            Rigidbody handRigidbody = GetComponent<Rigidbody>();
+
+            joint.connectedBody = handRigidbody;
+            joint.breakForce = float.MaxValue;
+            joint.breakTorque = float.MaxValue;
+             
+            isGrabbing = true;
+        }
+    }
+
+    private void AdvanceRelease()
+    {
+        if(touchedObject != null)
+        {
+            FixedJoint fixedJoint = touchedObject.GetComponent<FixedJoint>();
+            Destroy(fixedJoint);
+
+            isGrabbing = false;
+            touchedObject = null;
         }
     }
 
@@ -114,7 +143,7 @@ public class VRHand : MonoBehaviour
 
             Vector3 velocity = (transform.position - previousPosition) / Time.deltaTime;
             touchedObject.GetComponent<Rigidbody>().velocity = velocity * throwForce;
-            
+
             Vector3 angularVelocity = (transform.rotation.eulerAngles - previousRotation) / Time.deltaTime;
             touchedObject.GetComponent<Rigidbody>().angularVelocity = angularVelocity * throwForce;
 
@@ -132,6 +161,28 @@ public class VRHand : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        Grabbable grabbable = other.gameObject.GetComponent<Grabbable>();
+        if (grabbable != null && !isGrabbing)
+        {
+            touchedObject = other.gameObject;
+            Debug.Log("touching: " + touchedObject.name);
+        }
+    }
+    
+    private void OnTriggerExit(Collider other)
+    {
+        if (touchedObject != null && !isGrabbing)
+        {
+            if (other.gameObject == touchedObject)
+            {
+                touchedObject = null;
+            }
+        }
+    }
+    
+    
     private void OnCollisionExit(Collision other)
     {
         if (touchedObject != null && !isGrabbing)
